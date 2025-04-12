@@ -1,0 +1,148 @@
+body {
+    margin: 0;
+    padding: 5px;
+    font-family: Arial, sans-serif;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background-color: #0e0e10;
+    color: white;
+    box-sizing: border-box;
+    overflow-y: hidden;
+    min-width: 620px;
+}
+
+#chatContainer {
+    flex: 1;
+    overflow-y: auto;
+    border: 1px solid #343434;
+    border-radius: 4px;
+    margin-bottom: 15px;
+    padding: 10px;
+    background-color: #18181b;
+    scroll-behavior: smooth;
+}
+
+.message {
+    margin: 8px 0;
+    padding: 8px 12px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: #23232b;
+    border-radius: 10px;
+    box-shadow: 0 2px 12px 0 rgba(0,0,0,0.18);
+    border: 1px solid #23232b;
+    opacity: 1;
+    transform: translateY(0);
+    transition: box-shadow 0.2s, background 0.2s, border 0.2s;
+}
+
+.message-animate {
+    animation: messageFadeInUp 0.45s cubic-bezier(.23,1.01,.32,1) both;
+}
+
+@keyframes messageFadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(24px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.message-content {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    max-width: 100%;
+}
+.username-row {
+    font-weight: bold;
+    white-space: nowrap;
+    font-size: 1em;
+    margin-right: 2px;
+}
+.message-text {
+    white-space: pre-wrap;
+    word-break: break-word;
+    overflow-wrap: anywhere;
+    font-size: 1em;
+    flex: 1 1 0;
+    min-width: 0;
+}
+
+.copy-profile-btn {
+    background: none;
+    border: none;
+    color: #9147ff;
+    cursor: pointer;
+    padding: 4px;
+    margin-right: 8px;
+}
+
+.input-group {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    position: sticky;
+    bottom: 0;
+    background: #18181b;
+    z-index: 10;
+    padding: 10px 0;
+}
+
+#messageInput {
+    flex: 2;
+    padding: 10px;
+    border: 1px solid #343434;
+    border-radius: 4px;
+    background: #1f1f23;
+    color: white;
+}
+
+#usernameInput {
+    width: 120px;
+    padding: 10px;
+    border: 1px solid #343434;
+    border-radius: 4px;
+    background: #1f1f23;
+    color: white;
+}
+
+#colorInput {
+    width: 40px;
+    height: 40px;
+    padding: 2px;
+    border: none;
+    background: none;
+    cursor: pointer;
+}
+
+.reset-profile-btn {
+    background: #9147ff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 8px;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+button {
+    padding: 10px 20px;
+    background-color: #9147ff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
