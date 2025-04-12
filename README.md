@@ -1,8 +1,11 @@
 # Loco Chat
 
-Loco Chat é uma interface web leve para visualizar, interagir e gerenciar chats de streamers da plataforma Loco, com recursos avançados como cópia de perfis, envio de mensagens, painel de stickers e configuração dinâmica de credenciais.
+Loco Chat é uma interface web leve para visualizar, interagir e gerenciar chats de streamers da plataforma Loco, com recursos avançados como cópia de perfis (ao clicar em ⚡) , envio de mensagens com qualquer nome de usuário, painel de stickers e configuração dinâmica de credenciais.
 
 > **Atenção:** A funcionalidade de envio de stickers ainda está em desenvolvimento (TODO).
+
+Visual do chat:
+![image](https://github.com/user-attachments/assets/4b207494-17e2-4d8c-9677-e87a0983eeda)
 
 ## Recursos
 
