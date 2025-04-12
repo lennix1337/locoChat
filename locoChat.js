@@ -540,8 +540,8 @@ async function sendMessage() {
 }
 
 function resetProfile() {
-    $id('usernameInput').value = 'butuca';
-    currentAvatar = "https://static.getloconow.com/thumbnail/rescaled/users/9EJ4S6V4F6cb416cc5-ec3b-4d49-9c9c-ce4927cf9093.jpeg";
+    $id('usernameInput').value = 'default_username';
+    currentAvatar = "https://static.getloconow.com/loco-avatars/57b458f2b7b64e5e957f20866cf66a56.png";
 }
 
 function clearChat() {
