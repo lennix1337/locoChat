@@ -5,6 +5,7 @@ Loco Chat é uma interface web leve para visualizar, interagir e gerenciar chats
 > **Atenção:** A funcionalidade de envio de stickers ainda está em desenvolvimento (TODO).
 
 Visual do chat:
+<br>
 ![image](https://github.com/user-attachments/assets/4b207494-17e2-4d8c-9677-e87a0983eeda)
 
 ## Recursos
