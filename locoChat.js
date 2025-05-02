@@ -395,6 +395,19 @@ async function addMessageToChat(msgData) {
     messageDiv.className = 'message';
     messageDiv.dataset.msgId = uniqueId;
 
+    // Get the current user's username from the input field
+    const currentUserInput = $id('usernameInput');
+    const currentUsername = currentUserInput ? currentUserInput.value : null;
+
+    // Check if the message contains a mention of the current user
+    if (currentUsername && msgData.message) {
+        // Create a regex to match "@username" or "username" as whole words, case-insensitive
+        const mentionRegex = new RegExp(`(^|\\W)@?${currentUsername}(\\W|$)`, 'i');
+        if (mentionRegex.test(msgData.message)) {
+            messageDiv.classList.add('message-mention');
+        }
+    }
+
     // Detecta sticker
     const isSticker = msgData.sticker && msgData.sticker.image_url;
 

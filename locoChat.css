@@ -158,3 +158,8 @@ button {
 .message:hover .reply-icon {
     opacity: 1; /* Fully visible on message hover */
 }
+
+.message-mention {
+    background-color: #4a2323; /* Reddish background */
+    border-color: #ff0000; /* Optional: Add a red border */
+}
