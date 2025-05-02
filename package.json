@@ -1,0 +1,18 @@
+{
+  "name": "locochat-electron",
+  "version": "1.0.0",
+  "description": "Electron wrapper for LocoChat",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "keywords": [
+    "electron",
+    "locochat"
+  ],
+  "author": "Your Name",
+  "license": "MIT",
+  "devDependencies": {
+    "electron": "^28.0.0"
+  }
+}

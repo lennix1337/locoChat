@@ -23,31 +23,39 @@ Visual do chat:
 ## Requisitos
 
 - Navegador moderno (Chrome, Firefox, Edge, etc).
-- Não requer backend, instalação de dependências ou build.
+- Node.js e npm instalados (para executar a versão Electron).
 
-## Instalação
+## Configuração e Execução da Aplicação Electron
 
-1. **Clone ou baixe este repositório:**
-   ```sh
-   git clone https://github.com/lennix1337/locoChat.git
-   ```
-   ou baixe o ZIP e extraia.
+Para rodar a aplicação como um aplicativo desktop usando Electron:
 
-2. **Crie um arquivo `.env` na raiz do projeto contendo seu UID:**  
-   ```
-   UID=SEU_UID_AQUI
-   AUTHORIZATION=seu_token_de_autorizacao
-   X_CLIENT_ID=seu_client_id
-   X_CLIENT_SECRET=seu_client_secret
-   ```
-   > **Nunca compartilhe ou publique seu `.env`. O arquivo já está listado no `.gitignore` e não será versionado.
+1.  **Instale as dependências:**
+    Navegue até o diretório raiz do projeto no terminal e execute:
+    ```sh
+    npm install
+    ```
+    Este comando instalará todas as dependências necessárias listadas no `package.json`, incluindo o Electron.
 
-3. **Abra o arquivo `index.html` no navegador.**
+2.  **Execute a aplicação em modo de desenvolvimento:**
+    Após a instalação das dependências, execute o seguinte comando no terminal:
+    ```sh
+    npm start
+    ```
+    Este comando iniciará a aplicação Electron em modo de desenvolvimento.
 
-> **Atenção:** Para enviar mensagens, é obrigatório definir seu UID no arquivo `.env` (linha `UID=SEU_UID_AQUI`).
-- Clique duas vezes ou arraste para uma janela do navegador.
+3.  **Construir e Empacotar (Opcional):**
+    Para criar um executável da aplicação para distribuição (por exemplo, para Windows), você precisará de uma ferramenta como `electron-builder` ou `electron-packager`.
 
-> **Nota:** Você pode escolher qualquer nome de usuário ao utilizar o projeto, incluindo nomes com emojis e qualquer quantidade de caracteres. No entanto, lembre-se: banimentos e timeouts sempre estarão vinculados ao seu UID, independentemente do nome escolhido ou copiado.
+    *   Instale `electron-builder` (ou sua ferramenta de preferência) como dependência de desenvolvimento:
+        ```sh
+        npm install electron-builder --save-dev
+        ```
+    *   Adicione a configuração de build no seu `package.json`.
+    *   Execute o comando de build (o comando exato dependerá da sua configuração no `package.json`, mas geralmente é algo como):
+        ```sh
+        npm run build
+        ```
+    Os executáveis e arquivos de instalação serão gerados em um diretório de saída (geralmente `dist` ou `out`).
 
 ## Como obter seus tokens de authorization e client
 
