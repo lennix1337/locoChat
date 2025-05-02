@@ -146,3 +146,15 @@ button {
     border-radius: 4px;
     cursor: pointer;
 }
+
+.reply-icon {
+    margin-left: auto; /* Push to the right */
+    cursor: pointer;
+    opacity: 0.5; /* Slightly transparent when not hovered */
+    transition: opacity 0.2s ease-in-out;
+    font-size: 1.1em;
+}
+
+.message:hover .reply-icon {
+    opacity: 1; /* Fully visible on message hover */
+}

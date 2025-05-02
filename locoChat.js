@@ -428,6 +428,7 @@ async function addMessageToChat(msgData) {
         `;
     }
 
+    messageDiv.dataset.username = msgData.profile.username; // Store username in data attribute
     messageDiv.innerHTML = `
         <button class="copy-profile-btn"
             data-username="${msgData.profile.username}"
@@ -439,8 +440,23 @@ async function addMessageToChat(msgData) {
         <div class="message-content">
             ${messageContentHTML}
         </div>
+        <span class="reply-icon" title="Responder">↩️</span>
     `;
     container.appendChild(messageDiv);
+
+    const replyIcon = messageDiv.querySelector('.reply-icon');
+    if (replyIcon) {
+        replyIcon.addEventListener('click', () => {
+            const username = messageDiv.dataset.username;
+            const messageInput = $id('messageInput');
+            if (messageInput && username) {
+                const replyText = `@${username} `;
+                messageInput.value = replyText;
+                messageInput.focus();
+                messageInput.setSelectionRange(replyText.length, replyText.length);
+            }
+        });
+    }
 
     // Se for sticker, busca o base64 e atualiza a imagem
     if (isSticker) {
