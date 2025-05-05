@@ -380,6 +380,137 @@ function getMessageUniqueId(msgData) {
     return `${msgData.client_msg_time || ""}-${msgData.deviceId || ""}`;
 }
 
+let cached7tvEmotes = {}; // Cache for 7tv emotes
+
+async function fetch7tvEmotes() {
+    const userId = "01GMDM1SB00000PRS4M6P66BM2"; // Provided 7tv user ID
+    const graphqlEndpoint = 'https://7tv.io/v3/gql';
+    const query = `
+        query GetEmotes($userId: String) {
+            user(id: $userId) {
+                emote_sets {
+                    emotes {
+                        id
+                        name
+                        data {
+                            host {
+                                url
+                                files {
+                                    name
+                                    format
+                                    width
+                                    height
+                                    frame_count
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    `;
+
+    console.log(`Fetching 7tv emotes for user ID: ${userId}`);
+    try {
+        const response = await fetch(graphqlEndpoint, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                query: query,
+                variables: { userId: userId },
+            }),
+        });
+
+        if (!response.ok) {
+            console.error('Failed to fetch 7tv emotes:', response.statusText);
+            return;
+        }
+
+        const result = await response.json();
+        console.log("7tv GraphQL responsee:", result); // Log the full response
+        if (result.errors) {
+            console.error("7tv GraphQL errors:", result.errors);
+        }
+        const emotes = {};
+
+        // Process global emotes
+        if (result.data && result.data.globalEmotes) {
+            result.data.globalEmotes.forEach(emote => {
+                if (emote.data && emote.data.host && emote.data.host.files && emote.data.host.files.length > 0) {
+                     // Find the largest webp file URL
+                    const largestWebp = emote.data.host.files
+                        .filter(file => file.format === 'WEBP')
+                        .sort((a, b) => b.width * b.height - a.width * a.height)[0];
+
+                    if (largestWebp) {
+                         let imageUrl = emote.data.host.url + '/' + largestWebp.name;
+                         if (!imageUrl.startsWith('http://') && !imageUrl.startsWith('https://')) {
+                             imageUrl = 'https://' + imageUrl;
+                         }
+                         emotes[emote.name] = imageUrl;
+                    } else if (emote.data.host.files.length > 0) {
+                        // Fallback to the first file if no webp is found
+                        emotes[emote.name] = emote.data.host.url + '/' + emote.data.host.files[0].name;
+                    }
+                }
+            });
+        }
+
+        // Process channel emotes
+        if (result.data && result.data.user && result.data.user.emote_sets) {
+            result.data.user.emote_sets.forEach(emoteSet => {
+                if (emoteSet.emotes) {
+                    emoteSet.emotes.forEach(emote => {
+                        if (emote.data && emote.data.host && emote.data.host.files && emote.data.host.files.length > 0) {
+                            // Find the largest webp file URL
+                            const largestWebp = emote.data.host.files
+                                .filter(file => file.format === 'WEBP')
+                                .sort((a, b) => b.width * b.height - a.width * a.height)[0];
+
+                            if (largestWebp) {
+                                let imageUrl = emote.data.host.url + '/' + largestWebp.name;
+                                if (!imageUrl.startsWith('http://') && !imageUrl.startsWith('https://')) {
+                                    imageUrl = 'https://' + imageUrl;
+                                }
+                                emotes[emote.name] = imageUrl;
+                            } else if (emote.data.host.files.length > 0) {
+                                // Fallback to the first file if no webp is found
+                                emotes[emote.name] = emote.data.host.url + '/' + emote.data.host.files[0].name;
+                            }
+                        }
+                    });
+                }
+            });
+        }
+
+        cached7tvEmotes = emotes;
+        console.log("7tv emotes cached:", Object.keys(cached7tvEmotes).length);
+    } catch (error) {
+        console.error("Error fetching 7tv emotes:", error);
+    }
+}
+
+// Function to replace emote names in message text with image tags
+function replaceEmotesInMessage(messageText) {
+    let processedText = messageText;
+    for (const emoteName in cached7tvEmotes) {
+        const emoteUrl = cached7tvEmotes[emoteName];
+        // Create a regex to find the whole word emote name
+        const regex = new RegExp(`(^|\\s)${escapeRegExp(emoteName)}(\\s|$)`, 'g');
+        processedText = processedText.replace(regex, (match, p1, p2) => {
+            // p1 is the preceding space or start of string, p2 is the trailing space or end of string
+            return `${p1}<img src="${emoteUrl}" alt="${emoteName}" title="${emoteName}" class="chat-emote">${p2}`;
+        });
+    }
+    return processedText;
+}
+
+// Helper function to escape special characters in regex
+function escapeRegExp(string) {
+    return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); // $& means the whole matched string
+}
 async function addMessageToChat(msgData) {
     const container = $id('chatContainer');
     const uniqueId = getMessageUniqueId(msgData);
@@ -437,7 +568,7 @@ async function addMessageToChat(msgData) {
             <span class="username-row" style="color: ${userColor}; font-weight: bold;">
                 ${msgData.profile.username}
             </span>
-            <span class="message-text">${msgData.message}</span>
+            <span class="message-text">${replaceEmotesInMessage(msgData.message)}</span>
         `;
     }
 
@@ -625,6 +756,52 @@ function setupEventListeners() {
     });
     $id('closeStickersPanel').addEventListener('click', () => closePanel('stickersPanel'));
     $id('closeCopiedUsersPanel').addEventListener('click', () => closePanel('copiedUsersPanel'));
+
+    // 7tv Emotes button functionality
+    const sevenTvEmotesBtn = $id('sevenTvEmotesBtn');
+    const sevenTvEmotesContainer = $id('sevenTvEmotesContainer');
+    const sevenTvEmotesList = $id('sevenTvEmotesList');
+
+    if (sevenTvEmotesBtn && sevenTvEmotesContainer && sevenTvEmotesList) {
+        sevenTvEmotesBtn.addEventListener('click', () => {
+            if (sevenTvEmotesContainer.style.display === 'none' || sevenTvEmotesContainer.style.display === '') {
+                sevenTvEmotesContainer.style.display = 'block';
+                render7tvEmotes(); // Render emotes when shown
+            } else {
+                sevenTvEmotesContainer.style.display = 'none';
+            }
+        });
+    }
+}
+
+// Function to render 7tv emotes in the container
+function render7tvEmotes() {
+    const sevenTvEmotesList = $id('sevenTvEmotesList');
+    sevenTvEmotesList.innerHTML = ''; // Clear previous emotes
+
+    if (Object.keys(cached7tvEmotes).length === 0) {
+        sevenTvEmotesList.innerHTML = '<span style="color:#aaa;">Nenhum emote 7tv disponível.</span>';
+        return;
+    }
+
+    for (const emoteName in cached7tvEmotes) {
+        const emoteUrl = cached7tvEmotes[emoteName];
+        console.log(`Rendering emote: ${emoteName}, URL: ${emoteUrl}`); // Log the emote URL
+        const img = document.createElement('img');
+        img.src = emoteUrl;
+        img.alt = emoteName;
+        img.title = emoteName;
+        img.classList.add('chat-emote'); // Use the existing emote class
+        img.style.cursor = "pointer";
+        img.onclick = () => {
+            const messageInput = $id('messageInput');
+            if (messageInput) {
+                messageInput.value += ` ${emoteName} `; // Add emote name to input
+                messageInput.focus();
+            }
+        };
+        sevenTvEmotesList.appendChild(img);
+    }
 }
 
 function togglePanel(panelId) {
@@ -657,6 +834,8 @@ async function initChat() {
     }
     CHAT_URL = `https://chat.getloconow.com/v2/streams/${streamerId}/chat/`;
     currentStreamUid = streamerId;
+    // Fetch 7tv emotes for the streamer
+    await fetch7tvEmotes(streamerId); // Assuming streamerId is the 7tv user ID
     // Busca stickers apenas uma vez por streamer
     cachedStickers = await fetchStickers(currentStreamUid);
 

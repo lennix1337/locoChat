@@ -22,10 +22,16 @@
             </div>
             <div id="chatPausedNotice" style="display:none"></div>
             <div id="chatContainer" style="flex: 1;"></div>
+            <div id="sevenTvEmotesContainer" style="display: none; padding: 10px; background: #1e1e1e; border-top: 1px solid #333; overflow-y: auto; max-height: 200px;">
+                <div id="sevenTvEmotesList" style="display: flex; flex-wrap: wrap; gap: 5px;">
+                    <!-- 7TV emotes will be rendered here -->
+                </div>
+            </div>
             <div class="input-group">
                 <input type="text" id="usernameInput" value="default_username" placeholder="Username">
                 <button class="reset-profile-btn" id="resetProfileBtn" type="button">Reset Profile</button>
                 <input type="text" id="messageInput" placeholder="Send a message..." autocomplete="off">
+                <button id="sevenTvEmotesBtn" type="button" title="7TV Emotes">7TV</button>
                 <button id="sendBtn" type="button">Send</button>
             </div>
         </div>

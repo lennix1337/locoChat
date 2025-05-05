@@ -163,3 +163,25 @@ button {
     background-color: #4a2323; /* Reddish background */
     border-color: #ff0000; /* Optional: Add a red border */
 }
+/* 7tv Emote Styling */
+.chat-emote {
+    height: 2em; /* Adjust size as needed */
+    vertical-align: middle;
+}
+/* 7tv Emotes Container Styling */
+#sevenTvEmotesContainer {
+    /* Styles are already inline in index.html, but can add more here if needed */
+}
+
+#sevenTvEmotesList {
+    /* Styles are already inline in index.html, but can add more here if needed */
+}
+
+/* Style for individual 7tv emotes in the list */
+#sevenTvEmotesList img.chat-emote {
+    height: 40px; /* Adjust size for display in the list */
+    width: auto;
+    cursor: pointer;
+    margin: 2px;
+    vertical-align: middle;
+}
